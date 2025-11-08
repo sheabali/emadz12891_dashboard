@@ -2,11 +2,29 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 interface AuthState {
   token: string | null;
+  user: User | null;
   refresh_token: string | null;
 }
 
+export type UserRole = "SELLER" | "BUYER" | "ADMIN" | "SUPER_ADMIN";
+
+export interface User {
+  id: string;
+  email: string;
+  role: UserRole;
+}
+
+export type JwtPayload = {
+  email: string;
+  exp: number;
+  iat: number;
+  id: string;
+  role: UserRole;
+};
+
 const initialState: AuthState = {
   token: null,
+  user: null,
   refresh_token: null,
 };
 
@@ -14,9 +32,10 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ token: string }>) => {
+    setUser: (state, action: PayloadAction<{ token: string; user: User }>) => {
       state.token = action.payload.token;
-      Cookies.set("accessToken", action.payload.token);
+      state.user = action.payload.user;
+      Cookies.set("token", action.payload.token);
     },
     setRefreshToken: (
       state,
@@ -27,8 +46,9 @@ const authSlice = createSlice({
     },
     logout: (state) => {
       state.token = null;
+      state.user = null;
       state.refresh_token = null;
-      Cookies.remove("accessToken");
+      Cookies.remove("token");
     },
   },
 });
