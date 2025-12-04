@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/ui/loading";
 import { ReactNode } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -12,7 +13,7 @@ interface PageProps {
 export default function ReduxProvider({ children }: PageProps) {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate loading={<Loading />} persistor={persistor}>
         {children}
       </PersistGate>
     </Provider>

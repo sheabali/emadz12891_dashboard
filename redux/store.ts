@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { configureStore } from "@reduxjs/toolkit";
 import {
   FLUSH,
@@ -9,26 +8,14 @@ import {
   REGISTER,
   REHYDRATE,
 } from "redux-persist";
-import { baseApi } from "./api/baseApi";
-import rootReducer from "./features/rootReducer";
 import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
-
-const noopStorage = {
-  getItem: (_key: string) => Promise.resolve(null),
-  setItem: (_key: string, _value: string) => Promise.resolve(),
-  removeItem: (_key: string) => Promise.resolve(),
-};
-
-export default noopStorage;
+import { baseApi } from "./api/baseApi";
+import rootReducer from "./features/rootReducer";
 
 const persistConfig = {
   key: "root",
-  storage:
-    typeof window !== "undefined" && window.localStorage
-      ? storage
-      : noopStorage,
-  whitelist: ["auth"],
+  storage,
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

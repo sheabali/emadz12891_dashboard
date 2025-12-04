@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  BaseQueryFn,
-  createApi,
-  FetchArgs,
-  fetchBaseQuery,
-  FetchBaseQueryError,
-} from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { logout } from "../features/authSlice";
 import { RootState } from "../store";
-import { logout, setUser } from "../features/authSlice";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
