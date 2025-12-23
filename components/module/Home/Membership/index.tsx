@@ -4,7 +4,7 @@ import Image from "next/image";
 const Membership = () => {
   return (
     <section className="bg-black text-white py-20 px-4">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         <div className="rounded-2xl overflow-hidden bg-black">
           <div className="text-center px-6 pt-10 pb-12">
             <span className="inline-block mb-4 rounded-full bg-lime-400/10 px-4 py-1 text-sm font-medium text-lime-400">
@@ -31,7 +31,7 @@ const Membership = () => {
 
           <div className="relative h-80 sm:h-[420px] w-full">
             <Image
-              src="/Membership Image.png"
+              src="/images/man.jpg"
               alt="Membership Court"
               fill
               className="object-cover"

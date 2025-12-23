@@ -19,7 +19,7 @@ export default function Navbar() {
   const navItems = [
     { label: "Home", href: "/" },
     { label: "Events", href: "/events" },
-    { label: "Testimonials", href: "/testimonials" },
+    { label: "Member Directory", href: "/member-directory" },
     { label: "Learning Library", href: "/library" },
     { label: "Pricing", href: "/pricing" },
   ];
@@ -68,7 +68,7 @@ export default function Navbar() {
         }`}
       >
         <div className="mx-auto flex items-center justify-between py-3 px-4 lg:px-6 max-w-7xl">
-          <div className="hidden lg:flex items-center gap-32 bg-white rounded-4xl py-2 px-20">
+          <div className="hidden lg:flex items-center gap-32 bg-white rounded-4xl py-2 px-16">
             <div className="shrink-0 transition-transform duration-200 hover:scale-105">
               <Link href="/">
                 <Image

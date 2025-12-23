@@ -27,9 +27,9 @@ const registerSchema = z
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const skillOptions = [
-  { value: "Beginner", label: "Beginner" },
+  { value: "Intermediate", label: "Intermediate" },
+  { value: "Expert", label: "Expert" },
   { value: "Advanced", label: "Advanced" },
-  { value: "Pro", label: "Pro" },
 ];
 
 const RegisterPage = () => {
