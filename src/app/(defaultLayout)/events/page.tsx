@@ -1,7 +1,9 @@
+import EventsPage from "@/components/module/Events";
+
 const page = () => {
   return (
-    <div>
-      <h1 className="text-5xl">Events Page</h1>
+    <div className="bg-[#f7fde2] pt-10">
+      <EventsPage />
     </div>
   );
 };

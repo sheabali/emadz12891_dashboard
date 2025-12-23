@@ -15,11 +15,11 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const navItems = [
-    { label: "Feature", href: "#home" },
-    { label: "Our Story", href: "#our-story" },
-    { label: "Testimonials", href: "#testimonials" },
-    { label: "Learning Library", href: "#library" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "Home", href: "/" },
+    { label: "Events", href: "/events" },
+    { label: "Testimonials", href: "/testimonials" },
+    { label: "Learning Library", href: "/library" },
+    { label: "Pricing", href: "/pricing" },
   ];
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="bg-linear-to-b from-[#dff98d] to-[#f1fdcb]">
+    <div className="bg-linear-to-b from-[#dff98d] mb-6 to-[#f1fdcb]">
       <nav
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled
@@ -142,7 +142,6 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Bottom Action */}
         <div className="px-6 pb-8 pt-4 border-t border-gray-200/50">
           <Button
             variant="default"
@@ -153,7 +152,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Backdrop */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
