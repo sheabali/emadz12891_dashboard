@@ -41,7 +41,7 @@ const PHSelect = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="space-y-2">
+        <FormItem className="space-y-2 w-full">
           <FormLabel>{label}</FormLabel>
 
           <FormControl>
@@ -50,7 +50,7 @@ const PHSelect = ({
               onValueChange={field.onChange}
               value={field.value}
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full py-6">
                 <SelectValue placeholder={`Select ${label}`} />
               </SelectTrigger>
 

@@ -1,7 +1,11 @@
-export default function RegisterPage() {
+import RegisterPage from "@/components/module/Auth/SingUp";
+
+const page = () => {
   return (
     <div>
-      <h1>Register</h1>
+      <RegisterPage />
     </div>
   );
-}
+};
+
+export default page;

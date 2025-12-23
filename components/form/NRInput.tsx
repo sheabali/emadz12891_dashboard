@@ -17,6 +17,7 @@ type PHInputProps = {
   name: string;
   label?: string;
   disabled?: boolean;
+  placeholder?: string;
   control: any;
 };
 
@@ -25,6 +26,7 @@ const PHInput = ({
   name,
   label,
   disabled,
+  placeholder,
   control,
 }: PHInputProps) => {
   const isPassword = type === "password";
@@ -44,8 +46,9 @@ const PHInput = ({
                 {...field}
                 id={name}
                 disabled={disabled}
+                placeholder={placeholder}
                 type={isPassword ? (showPassword ? "text" : "password") : type}
-                className={isPassword ? "pr-10" : ""}
+                className={isPassword ? "pr-10  py-6" : " py-6"}
               />
 
               {isPassword && (
