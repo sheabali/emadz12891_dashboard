@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { baseApi } from "@/redux/api/baseApi";
+
+import { baseApi } from "./baseApi";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder: any) => ({
@@ -13,7 +14,7 @@ export const authApi = baseApi.injectEndpoints({
     }),
     register: builder.mutation({
       query: (credentials: any) => ({
-        url: "/users/register",
+        url: "/auth/register",
         method: "POST",
         body: credentials,
       }),
@@ -59,20 +60,20 @@ export const authApi = baseApi.injectEndpoints({
     changePassword: builder.mutation({
       query: (data: any) => ({
         url: "/auth/change-password",
-        method: "POST",
+        method: "PUT",
         body: data,
       }),
     }),
     getMe: builder.query({
       query: () => ({
-        url: "/users/me",
+        url: "/users/profile",
         method: "GET",
       }),
       providesTags: ["User"],
     }),
     updateUser: builder.mutation({
       query: (data: any) => ({
-        url: "/users/profile",
+        url: "/users/update-profile",
         method: "PUT",
         body: data,
       }),
