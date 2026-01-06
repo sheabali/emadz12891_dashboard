@@ -1,17 +1,9 @@
-import MeetsCommunity from "@/components/module/Home/MeetsCommunity";
-import Membership from "@/components/module/Home/Membership";
-import PlayCompete from "@/components/module/Home/PlayCompete";
-import WhyJoinOur from "@/components/module/Home/WhyJoinOur";
-
-const HomePage = () => {
+const page = () => {
   return (
-    <div>
-      <MeetsCommunity />
-      <WhyJoinOur />
-      <PlayCompete />
-      <Membership />
+    <div className="h-screen text-6xl flex items-center justify-center">
+      Welcome to home
     </div>
   );
 };
 
-export default HomePage;
+export default page;
