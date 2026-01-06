@@ -273,7 +273,9 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <LayoutPanelLeft />
+      <span className="cursor-pointer">
+        <LayoutPanelLeft />
+      </span>
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
