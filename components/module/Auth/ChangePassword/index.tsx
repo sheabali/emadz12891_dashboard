@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useChangePasswordMutation } from "@/src/redux/api/authApi";
+import { useChangePasswordMutation } from "@/redux/api/authApi";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Eye, EyeOff } from "lucide-react";
@@ -30,7 +30,7 @@ const changePasswordSchema = z
       .min(8, "Password must be at least 8 characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
       ),
     confirmPassword: z.string().min(1, "Please confirm your password"),
   })
@@ -179,8 +179,8 @@ export default function ChangePassword() {
                           errors.newPassword || isSamePassword
                             ? "border-red-300 focus:border-red-500"
                             : watchNewPassword && !errors.newPassword
-                            ? "border-green-300 focus:border-green-500"
-                            : "border-gray-200 focus:border-blue-500"
+                              ? "border-green-300 focus:border-green-500"
+                              : "border-gray-200 focus:border-blue-500"
                         }`}
                         autoComplete="new-password"
                       />
@@ -226,9 +226,9 @@ export default function ChangePassword() {
                           errors.confirmPassword
                             ? "border-red-300 focus:border-red-500"
                             : watchConfirmPassword &&
-                              watchNewPassword === watchConfirmPassword
-                            ? "border-green-300 focus:border-green-500"
-                            : "border-gray-200 focus:border-blue-500"
+                                watchNewPassword === watchConfirmPassword
+                              ? "border-green-300 focus:border-green-500"
+                              : "border-gray-200 focus:border-blue-500"
                         }`}
                         autoComplete="new-password"
                       />

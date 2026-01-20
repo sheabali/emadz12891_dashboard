@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useResetPasswordMutation } from "@/src/redux/api/authApi";
+import { useResetPasswordMutation } from "@/redux/api/authApi";
 
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
