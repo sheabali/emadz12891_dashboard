@@ -1,50 +1,13 @@
-import TournamentsCard from "@/components/shared/TournamentsCard/TournamentsCard";
-
-export default function Home() {
-  const cardData = [
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1559552673-350e98ba6a1f?q=80&w=1406&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      title: "Summer Football Championship 2025",
-      date: "Jan 15 - 20, 2025",
-      location: "Central Sports Complex, Miami",
-      price: 150,
-      category: "Grass/Turf",
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1559552673-350e98ba6a1f?q=80&w=1406&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      title: "Summer Football Championship 2025",
-      date: "Jan 15 - 20, 2025",
-      location: "Central Sports Complex, Miami",
-      price: 150,
-      category: "Grass/Turf",
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1559552673-350e98ba6a1f?q=80&w=1406&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      title: "Summer Football Championship 2025",
-      date: "Jan 15 - 20, 2025",
-      location: "Central Sports Complex, Miami",
-      price: 150,
-      category: "Grass/Turf",
-    },
-    {
-      imageSrc:
-        "https://images.unsplash.com/photo-1559552673-350e98ba6a1f?q=80&w=1406&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      title: "Summer Football Championship 2025",
-      date: "Jan 15 - 20, 2025",
-      location: "Central Sports Complex, Miami",
-      price: 150,
-      category: "Grass/Turf",
-    },
-  ];
-
+const page = () => {
   return (
-    <div className="flex flex-wrap justify-center gap-6 p-6">
-      {cardData.map((card, index) => (
-        <TournamentsCard key={index} card={card} />
-      ))}
+    <div className="flex flex-col gap-4 mt-6 mx-4">
+      <h2 className="text-5xl">Welcome home.</h2>
+      <p className="text-2xl">
+        Your Next.js starter pack is ready—built for speed, clarity, and
+        shipping fast.
+      </p>
     </div>
   );
-}
+};
+
+export default page;
