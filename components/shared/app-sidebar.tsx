@@ -89,13 +89,13 @@ export default function AppSidebar({ role, ...props }: AppSidebarProps) {
   return (
     <Sidebar
       collapsible="icon"
-      className="w-64 bg-white border-r border-blue-200"
+      className="w-64  border-r border-blue-200"
       {...props}
     >
       <SidebarHeader>
         <Link
           href={"/"}
-          className="flex items-center w-full max-h-40 justify-center"
+          className="flex items-center w-full  max-h-40 justify-center"
         >
           <Image
             src={Logo.src}
