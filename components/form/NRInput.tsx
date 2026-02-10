@@ -38,7 +38,11 @@ const PHInput = ({
       name={name}
       render={({ field }) => (
         <FormItem className="space-y-2">
-          {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
+          {label && (
+            <FormLabel className="text-white" htmlFor={name}>
+              {label}
+            </FormLabel>
+          )}
 
           <FormControl>
             <div className="relative">

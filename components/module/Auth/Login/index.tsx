@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { setUser } from "@/redux/features/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
-
 import { setCookie } from "@/src/utils/cookies";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { jwtDecode, JwtPayload } from "jwt-decode";
@@ -21,8 +20,9 @@ type LoginFormValues = {
   email: string;
   password: string;
 };
+
 interface CustomJwtPayload extends JwtPayload {
-  role: string; // Add the role property here
+  role: string;
 }
 
 const schema = z.object({
@@ -49,20 +49,14 @@ const LoginPage = () => {
 
       if (res.success) {
         const token = res.data.token;
-
         setCookie(token);
 
         const user = jwtDecode<CustomJwtPayload>(token);
-
         dispatch(setUser({ token, user }));
 
         toast.success(res.message || "Login successful!");
 
-        if (user?.role === "ADMIN") {
-          router.push("/admin/dashboard");
-        } else {
-          router.push("/");
-        }
+        router.push(user?.role === "ADMIN" ? "/admin/dashboard" : "/");
       } else {
         toast.error(res.message || "Login failed");
       }
@@ -72,33 +66,50 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="flex w-full max-w-6xl items-center gap-28 px-4">
-        <div className="hidden md:flex flex-1 items-center justify-center bg-[#0c1421] rounded-lg min-h-[90vh]">
-          <Image
-            src="/bpc_logo.png"
-            alt="BPC Logo"
-            width={420}
-            height={420}
-            className="object-contain"
-            priority
-          />
-        </div>
+    <div className="relative min-h-screen w-full bg-gray-100">
+      {/* Background Image (FULL IMAGE – NO CUT) */}
+      <div
+        className="absolute inset-0 bg-center"
+        style={{
+          backgroundImage: "url('/Login3.png')",
+          backgroundSize: "cover",
+        }}
+      />
 
-        <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
+      {/* Optional overlay */}
+      <div className="absolute inset-0 bg-black/40 z-0" />
+
+      <div>
+        <Image
+          className="absolute -top-36 -left-36 -rotate-45 w-80 h-80 object-cover opacity-20"
+          src="/Ellipse_12.png"
+          width={500}
+          height={500}
+          alt="Background Image"
+        />
+      </div>
+
+      {/* Centered Login Card */}
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4">
+        <div className="w-full max-w-md rounded-xl bg-[#3580b2] p-6 shadow-2xl">
           <Link href="/">
             <Image
-              src="/bpc_logo.png"
+              src="/Logo.png"
               alt="BPC Logo"
-              width={150}
+              width={200}
               height={50}
               className="mx-auto mb-4 rounded-2xl"
+              priority
             />
           </Link>
-          <h1 className="text-center text-2xl font-semibold">Welcome Back</h1>
-          <p className="mb-6 mt-3 text-center text-sm text-gray-600">
-            Sign in to your Tennis Club account
+
+          <h1 className="text-center text-3xl text-white font-semibold">
+            Admin Panel
+          </h1>
+          <p className="mb-6 mt-3 text-center text-md text-gray-100">
+            Sign in to manage your platform
           </p>
+
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <PHInput
@@ -117,30 +128,15 @@ const LoginPage = () => {
                 placeholder="Enter your password"
               />
 
-              <div className="flex justify-end">
-                <Link
-                  href="/forgot-password"
-                  className="text-sm text-primary hover:underline"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-6 font-semibold"
+                className="w-full py-6 mt-6 font-semibold"
               >
                 {isLoading ? "Loading..." : "Sign In"}
               </Button>
             </form>
           </FormProvider>
-          <p className="mt-6 text-center text-sm text-gray-600">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-black hover:underline">
-              Sign Up
-            </Link>
-          </p>{" "}
         </div>
       </div>
     </div>
