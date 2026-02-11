@@ -55,13 +55,13 @@ export function NavMain({
                       tooltip={item.title}
                       className={`${
                         isActive
-                          ? "bg-primary text-white hover:bg-primary/80 hover:text-white "
+                          ? "bg-primary text-white my-10 hover:bg-primary/80 hover:text-white "
                           : ""
                       }`}
                     >
                       {item.icon && <item.icon className="mr-2 h-5 w-5" />}
                       <span>{item.title}</span>
-                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                      <ChevronRight className="ml-auto  transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
@@ -93,13 +93,13 @@ export function NavMain({
 
           // If no sub-items, render as a simple link
           return (
-            <SidebarMenuItem key={item.title}>
+            <SidebarMenuItem className="my-2 text-white" key={item.title}>
               <SidebarMenuButton
                 asChild
                 tooltip={item.title}
                 className={`${
                   isActive
-                    ? "bg-primary text-white hover:bg-primary/90 hover:text-white"
+                    ? "bg-white text-black font-semibold py-7 hover:bg-primary/90 hover:text-white"
                     : ""
                 }`}
               >

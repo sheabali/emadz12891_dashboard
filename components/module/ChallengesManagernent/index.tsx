@@ -155,7 +155,7 @@ const ChallengesManagement = () => {
       </div>
 
       <div className="p-4 text-end">
-        <Link href="/admin/dashboard/create-challenges">
+        <Link href="/admin/dashboard/challenges-managernent/create-challenges">
           <Button className="py-5">
             <Plus className="mr-2 h-4 w-4" />
             Add New

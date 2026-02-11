@@ -61,11 +61,6 @@ const data = {
         icon: User,
       },
       {
-        title: "Your Profile",
-        url: "/user/dashboard/profile",
-        icon: User,
-      },
-      {
         title: "Go Back To Home",
         url: "/",
         icon: Home,
