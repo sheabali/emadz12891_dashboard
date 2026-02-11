@@ -51,6 +51,11 @@ const data = {
         icon: HandCoins,
       },
       {
+        title: "Challenges Managernent",
+        url: "/admin/dashboard/challenges-managernent",
+        icon: HandCoins,
+      },
+      {
         title: "Your Profile",
         url: "/user/dashboard/profile",
         icon: User,

@@ -82,7 +82,7 @@ export function CourseForm() {
     console.log("Course Data:", data);
     console.log("Media Files:", mediaFiles);
     console.log("PDF Files:", pdfFiles);
-    // Handle form submission here
+
     alert("Course created successfully! Check console for details.");
   };
 

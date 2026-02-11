@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { CustomSelect } from "@/components/ui/core/CustomSelect/CustomSelect";
 import TablePagination from "@/components/ui/core/NRTable/TablePagination";
 import Link from "next/link";
-import { CourseCard } from "./CourseCard";
+import { ChallengesCard } from "./ChallengesCard";
 
 type UserStatus = "ACTIVE" | "DELETED";
 
@@ -38,7 +38,7 @@ const StatusBadge = ({ status }: { status: UserStatus }) => (
   </span>
 );
 
-const CoursesManagement = () => {
+const ChallengesManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState<string | undefined>(undefined);
@@ -155,7 +155,7 @@ const CoursesManagement = () => {
       </div>
 
       <div className="p-4 text-end">
-        <Link href="/admin/dashboard/courses-management/create-courses">
+        <Link href="/admin/dashboard/create-challenges">
           <Button className="py-5">
             <Plus className="mr-2 h-4 w-4" />
             Add New
@@ -193,7 +193,7 @@ const CoursesManagement = () => {
       {/* Card */}
       <div className="grid grid-cols-3 gap-6 p-5">
         {response?.data.map((course: any) => (
-          <CourseCard
+          <ChallengesCard
             key={course.id}
             title={course.title}
             description={course.description}
@@ -215,4 +215,4 @@ const CoursesManagement = () => {
   );
 };
 
-export default CoursesManagement;
+export default ChallengesManagement;
