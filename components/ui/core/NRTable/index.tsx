@@ -23,7 +23,7 @@ interface NRTableProps<TData, TValue> {
   emptyMessage?: string;
 }
 
-export function NRTable<TData, TValue>({
+export function EMTable<TData, TValue>({
   columns,
   data,
   emptyMessage = "No results.",
@@ -49,7 +49,7 @@ export function NRTable<TData, TValue>({
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </TableHead>
               ))}

@@ -72,13 +72,13 @@ const DashboardOverview = () => {
 
   const metrics = [
     {
-      title: "Total Tournaments",
+      title: "Total User",
       value: dashboard?.totalTournaments ?? 0,
       icon: <CalendarDays className="text-blue-600" />,
       bg: "bg-blue-100",
     },
     {
-      title: "Total Teams",
+      title: "Active User",
       value: dashboard?.totalTeams ?? 0,
       icon: <Users className="text-slate-700" />,
       bg: "bg-slate-200",

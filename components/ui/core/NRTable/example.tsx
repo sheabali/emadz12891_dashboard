@@ -5,7 +5,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import { toast } from "sonner";
-import { NRTable } from ".";
+import { EMTable } from ".";
 import DeleteConfirmationModal from "../NRModal/DeleteConfirmationModal";
 
 const user = [
@@ -128,7 +128,7 @@ const ExampleTable = () => {
 
   return (
     <div>
-      <NRTable columns={columns} data={user} />
+      <EMTable columns={columns} data={user} />
 
       <DeleteConfirmationModal
         name={selectedItem}
