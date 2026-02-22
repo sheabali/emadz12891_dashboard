@@ -5,7 +5,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import {
   Ban,
   CheckCircle,
-  Eye,
   MoreVertical,
   Search,
   UserCheck,
@@ -13,7 +12,6 @@ import {
   UserX,
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -256,12 +254,12 @@ const CustomersTable = () => {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" className="w-44">
-                <Link href={`/admin/dashboard/users/${customer.id}`}>
+                {/* <Link href={`/admin/dashboard/users/${customer.id}`}>
                   <DropdownMenuItem className="flex items-center gap-2">
                     <Eye className="h-5 w-5" />
                     View Details
                   </DropdownMenuItem>
-                </Link>
+                </Link> */}
 
                 {customer.status === "ACTIVE" ? (
                   <DropdownMenuItem
