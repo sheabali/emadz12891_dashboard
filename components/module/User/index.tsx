@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/preserve-manual-memoization */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -16,6 +17,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import MetricCard from "@/components/shared/MetricCardDashboard";
+import LoadingSpinner from "@/components/shared/spinner";
 import { CustomSelect } from "@/components/ui/core/CustomSelect/CustomSelect";
 import { EMTable } from "@/components/ui/core/NRTable";
 import TablePagination from "@/components/ui/core/NRTable/TablePagination";
@@ -25,8 +27,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  useActiveOrSuspendedUserMutation,
+  useGetAllUserQuery,
+} from "@/redux/api/dashboardApi";
 
 type UserStatus = "ACTIVE" | "SUSPENDED";
+type UserFilter = "ACTIVE" | "SUSPENDED";
 
 type Customer = {
   id: number;
@@ -53,127 +60,50 @@ const StatusBadge = ({ status }: { status: UserStatus }) => (
 );
 
 const CustomersTable = () => {
+  const limit = 10;
+
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [category, setCategory] = useState<string | undefined>(undefined);
+  const [filter, setFilter] = useState<UserFilter | undefined>(undefined);
 
-  const response = {
-    data: [
-      {
-        id: 1,
-        fullName: "John Doe",
-        email: "john@example.com",
-        role: "Admin",
-        status: "ACTIVE",
-        profileImage: "/boy.png",
-        phoneNumber: "+1 234 567 890",
-        createdAt: "2024-01-10",
-      },
-      {
-        id: 2,
-        fullName: "Jane Smith",
-        email: "jane@example.com",
-        role: "User",
-        status: "SUSPENDED",
-        profileImage: "/boy.png",
-        phoneNumber: "+1 987 654 321",
-        createdAt: "2024-02-01",
-      },
-      {
-        id: 1,
-        fullName: "John Doe",
-        email: "john@example.com",
-        role: "Admin",
-        status: "ACTIVE",
-        profileImage: "/boy.png",
-        phoneNumber: "+1 234 567 890",
-        createdAt: "2024-01-10",
-      },
-      {
-        id: 2,
-        fullName: "Jane Smith",
-        email: "jane@example.com",
-        role: "User",
-        status: "SUSPENDED",
-        profileImage: "/boy.png",
-        phoneNumber: "+1 987 654 321",
-        createdAt: "2024-02-01",
-      },
-      {
-        id: 1,
-        fullName: "John Doe",
-        email: "john@example.com",
-        role: "Admin",
-        status: "ACTIVE",
-        profileImage: "/boy.png",
-        phoneNumber: "+1 234 567 890",
-        createdAt: "2024-01-10",
-      },
-      {
-        id: 2,
-        fullName: "Jane Smith",
-        email: "jane@example.com",
-        role: "User",
-        status: "SUSPENDED",
-        profileImage: "/boy.png",
-        phoneNumber: "+1 987 654 321",
-        createdAt: "2024-02-01",
-      },
-      {
-        id: 1,
-        fullName: "John Doe",
-        email: "john@example.com",
-        role: "Admin",
-        status: "ACTIVE",
-        profileImage: "/boy.png",
-        phoneNumber: "+1 234 567 890",
-        createdAt: "2024-01-10",
-      },
-      {
-        id: 2,
-        fullName: "Jane Smith",
-        email: "jane@example.com",
-        role: "User",
-        status: "SUSPENDED",
-        profileImage: "/boy.png",
-        phoneNumber: "+1 987 654 321",
-        createdAt: "2024-02-01",
-      },
-    ] as Customer[],
-    meta: {
-      total: 2,
-    },
-  };
+  console.log("searchQuery, category", searchQuery, filter);
 
-  const dashboard = {
-    totalUsers: 2,
-    activeUsers: 1,
-    suspendedUsers: 1,
-  };
+  const [makeStatusChange, { isLoading: isStatusChanging }] =
+    useActiveOrSuspendedUserMutation();
+
+  const { data: res, isLoading } = useGetAllUserQuery({
+    limit,
+    page: currentPage,
+    search: searchQuery,
+    status: filter,
+  });
+
+  const user = res?.data || [];
+  const meta = res?.meta || { total: 0 };
+  const totalItems = meta.total || 0;
+
+  console.log("user", user);
 
   const metrics = [
     {
       title: "Total Users",
-      value: dashboard.totalUsers,
+      value: meta?.total || 0,
       icon: <Users2 className="text-blue-600" />,
       bg: "bg-blue-100",
     },
     {
       title: "Active Users",
-      value: dashboard.activeUsers,
+      value: meta?.totalActiveUsers || 0,
       icon: <UserCheck className="text-green-700" />,
       bg: "bg-green-100",
     },
     {
       title: "Suspended Users",
-      value: dashboard.suspendedUsers,
+      value: meta?.totalSuspendUsers || 0,
       icon: <UserX className="text-red-600" />,
       bg: "bg-red-100",
     },
   ];
-
-  const userData = response.data;
-  const totalItems = response.meta.total;
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -182,9 +112,11 @@ const CustomersTable = () => {
 
   const handleStatusChange = async (customer: Customer, status: UserStatus) => {
     try {
-      // await suspendUser({ id: customer.id, status }).unwrap();
+      await makeStatusChange({ userId: customer.id, status }).unwrap();
       toast.success(
-        `User ${status === "SUSPENDED" ? "suspended" : "activated"} successfully`,
+        `User ${customer.fullName} has been ${
+          status === "ACTIVE" ? "activated" : "suspended"
+        }.`,
       );
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
@@ -203,24 +135,21 @@ const CustomersTable = () => {
               alt="avatar"
               width={36}
               height={36}
-              className="rounded-full object-cover"
+              className="rounded-full w-10 h-10 object-cover"
             />
             <div>
               <p className="font-medium text-gray-900">
                 {row.original.fullName}
               </p>
-              <p className="text-xs text-gray-500">{row.original.email}</p>
             </div>
           </div>
         ),
       },
       {
-        accessorKey: "phoneNumber",
-        header: "Phone",
+        accessorKey: "email",
+        header: "Email",
         cell: ({ row }) => (
-          <p className="text-sm text-gray-700">
-            {row.original.phoneNumber || "N/A"}
-          </p>
+          <p className="text-sm text-gray-700">{row.original.email || "N/A"}</p>
         ),
       },
       {
@@ -254,13 +183,6 @@ const CustomersTable = () => {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" className="w-44">
-                {/* <Link href={`/admin/dashboard/users/${customer.id}`}>
-                  <DropdownMenuItem className="flex items-center gap-2">
-                    <Eye className="h-5 w-5" />
-                    View Details
-                  </DropdownMenuItem>
-                </Link> */}
-
                 {customer.status === "ACTIVE" ? (
                   <DropdownMenuItem
                     onClick={() => handleStatusChange(customer, "SUSPENDED")}
@@ -287,9 +209,12 @@ const CustomersTable = () => {
     [],
   );
 
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <div className="rounded-xl bg-white shadow mt-4">
-      {/* Metrics */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 p-4">
         {metrics.map((metric) => (
           <MetricCard key={metric.title} {...metric} />
@@ -317,11 +242,11 @@ const CustomersTable = () => {
 
         <div>
           <CustomSelect
-            label="Category"
-            placeholder="Select category"
-            options={["FOOTVOLLEY", "E_SPORT", "FUSTAL", "TURF", "GRASS"]}
+            label="Filter"
+            placeholder="Filter Users"
+            options={["ACTIVE", "SUSPENDED"]}
             onChange={(value) => {
-              setCategory(value);
+              setFilter(value as UserFilter);
               setCurrentPage(1);
             }}
           />
@@ -329,7 +254,7 @@ const CustomersTable = () => {
       </div>
 
       <div className="pb-4 px-4">
-        <EMTable columns={columns} data={userData} />
+        <EMTable columns={columns} data={user} />
       </div>
 
       {totalItems > 10 && (
