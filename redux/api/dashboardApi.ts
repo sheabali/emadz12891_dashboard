@@ -35,6 +35,53 @@ export const dashboardApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Dashboard"],
     }),
+
+    createCourse: builder.mutation({
+      query: (courseData) => ({
+        url: "/courses/create-course",
+        method: "POST",
+        body: courseData,
+      }),
+      invalidatesTags: ["Dashboard"],
+    }),
+
+    getAllCourses: builder.query({
+      query: ({ limit, page, searchQuery, category }) => {
+        return {
+          url: `/courses?page=${page || 1}&limit=${limit || 10}${searchQuery ? `&searchTerm=${searchQuery}` : ""}${category ? `&category=${category}` : ""}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Dashboard"],
+    }),
+    deleteCourse: builder.mutation({
+      query: (courseId) => ({
+        url: `/courses/${courseId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Dashboard"],
+    }),
+    multipleFileUploader: builder.mutation({
+      query: (file) => ({
+        url: `/file-uploads/file-upload`,
+        method: "POST",
+        body: file,
+      }),
+    }),
+    singleFileUploader: builder.mutation({
+      query: (file) => ({
+        url: `/file-uploads/upload-single`,
+        method: "POST",
+        body: file,
+      }),
+    }),
+    deleteFile: builder.mutation({
+      query: (fileId) => ({
+        url: `/file-uploads/multiple-delete`,
+        method: "DELETE",
+        body: { fileId },
+      }),
+    }),
   }),
 });
 
@@ -42,4 +89,10 @@ export const {
   useGetDashboardStatsQuery,
   useGetAllUserQuery,
   useActiveOrSuspendedUserMutation,
+  useCreateCourseMutation,
+  useGetAllCoursesQuery,
+  useDeleteCourseMutation,
+  useDeleteFileMutation,
+  useMultipleFileUploaderMutation,
+  useSingleFileUploaderMutation,
 } = dashboardApi;

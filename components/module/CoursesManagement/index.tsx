@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -6,144 +7,94 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import MetricCard from "@/components/shared/MetricCardDashboard";
+import LoadingSpinner from "@/components/shared/spinner";
 import { Button } from "@/components/ui/button";
 import { CustomSelect } from "@/components/ui/core/CustomSelect/CustomSelect";
 import TablePagination from "@/components/ui/core/NRTable/TablePagination";
+import {
+  useDeleteCourseMutation,
+  useGetAllCoursesQuery,
+} from "@/redux/api/dashboardApi";
 import Link from "next/link";
 import { CourseCard } from "./CourseCard";
 
-type UserStatus = "ACTIVE" | "DELETED";
-
-type Customer = {
-  id: number;
-  fullName: string;
-  email: string;
-  role: string;
-  status: UserStatus;
-  profileImage?: string;
-  phoneNumber?: string;
-  createdAt?: string;
+const mapCourseStatus = (status: string): "active" | "deleted" => {
+  if (status === "PUBLISHED") return "active";
+  return "deleted";
 };
 
-const statusStyles: Record<UserStatus, string> = {
-  ACTIVE: "bg-green-100 text-green-600 border-green-200",
-  DELETED: "bg-red-100 text-red-600 border-red-200",
-};
-
-const StatusBadge = ({ status }: { status: UserStatus }) => (
-  <span
-    className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${statusStyles[status]}`}
-  >
-    {status === "ACTIVE" ? "Active" : "deleted"}
-  </span>
-);
+const categories = [
+  { value: "all", label: "All" },
+  { value: "ISLAMIC_KNOWLEDGE", label: "Islamic Knowledge" },
+  { value: "LIFE_SKILLS", label: "Life Skills" },
+  { value: "PERSONAL_DEVELOPMENT", label: "Personal Development" },
+  { value: "ARABIC", label: "Arabic" },
+];
 
 const CoursesManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState<string | undefined>(undefined);
 
-  const response = {
-    data: [
-      {
-        id: 1,
-        title: "Tajweed Fundamentals",
-        description: "Learn proper Quran recitation with correct pronunciation",
-        category: "Quran Studies",
-        lessonsCount: 12,
-        status: "active",
-      },
-      {
-        id: 1,
-        title: "Tajweed Fundamentals",
-        description: "Learn proper Quran recitation with correct pronunciation",
-        category: "Quran Studies",
-        lessonsCount: 12,
-        status: "active",
-      },
-      {
-        id: 1,
-        title: "Tajweed Fundamentals",
-        description: "Learn proper Quran recitation with correct pronunciation",
-        category: "Quran Studies",
-        lessonsCount: 12,
-        status: "active",
-      },
-      {
-        id: 1,
-        title: "Tajweed Fundamentals",
-        description: "Learn proper Quran recitation with correct pronunciation",
-        category: "Quran Studies",
-        lessonsCount: 12,
-        status: "deleted",
-      },
-      {
-        id: 1,
-        title: "Tajweed Fundamentals",
-        description: "Learn proper Quran recitation with correct pronunciation",
-        category: "Quran Studies",
-        lessonsCount: 12,
-        status: "active",
-      },
-      {
-        id: 1,
-        title: "Tajweed Fundamentals",
-        description: "Learn proper Quran recitation with correct pronunciation",
-        category: "Quran Studies",
-        lessonsCount: 12,
-        status: "active",
-      },
-    ] as any,
-    meta: {
-      total: 2,
-    },
-  };
+  console.log("categories", category);
 
-  const dashboard = {
-    totalCourses: 2,
-    activeCourses: 1,
-    completionRate: 1,
-  };
+  const { data: response, isLoading } = useGetAllCoursesQuery({
+    page: currentPage,
+    searchQuery: searchQuery,
+    category: category === "all" ? undefined : category,
+    limit: 10,
+  });
+
+  const [deleteCourse, { isLoading: isDeleting }] = useDeleteCourseMutation();
+
+  const courses = response?.data || [];
+  const meta = response?.meta || { total: 0 };
+  const totalItems = meta.total;
 
   const metrics = [
     {
       title: "Total Courses",
-      value: dashboard.totalCourses,
+      value: meta.totalCourse,
       icon: <Users2 className="text-blue-600" />,
       bg: "bg-blue-100",
     },
     {
       title: "Active Courses",
-      value: dashboard.activeCourses,
+      value: meta.activeCourse,
       icon: <UserCheck className="text-green-700" />,
       bg: "bg-green-100",
     },
     {
       title: "Completion Rate",
-      value: dashboard.completionRate,
+      value: meta.completationRate,
       icon: <UserX className="text-red-600" />,
       bg: "bg-red-100",
     },
   ];
 
-  const userData = response.data;
-  const totalItems = response.meta.total;
-
   const handleSearch = (query: string) => {
+    console.log("query", query);
     setSearchQuery(query);
     setCurrentPage(1);
   };
 
-  const handleStatusChange = async (customer: Customer, status: UserStatus) => {
+  const handleStatusChange = async (course: any) => {
+    console.log("course", course.id);
+
     try {
-      // await suspendUser({ id: customer.id, status }).unwrap();
-      toast.success(
-        `User ${status === "DELETED" ? "suspended" : "activated"} successfully`,
-      );
+      await deleteCourse(course.id).unwrap();
+      toast.success("Course deleted successfully");
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
     }
   };
+
+  if (isLoading)
+    return (
+      <div>
+        <LoadingSpinner />
+      </div>
+    );
 
   return (
     <div className="rounded-xl bg-white shadow mt-4">
@@ -181,7 +132,7 @@ const CoursesManagement = () => {
           <CustomSelect
             label="Category"
             placeholder="Select category"
-            options={["All", "Active", "Deleted"]}
+            options={categories.map((category) => category.value)}
             onChange={(value) => {
               setCategory(value);
               setCurrentPage(1);
@@ -190,18 +141,17 @@ const CoursesManagement = () => {
         </div>
       </div>
 
-      {/* Card */}
       <div className="grid grid-cols-3 gap-6 p-5">
-        {response?.data.map((course: any) => (
+        {courses?.map((course: any) => (
           <CourseCard
             key={course.id}
             title={course.title}
             description={course.description}
             category={course.category}
-            lessonsCount={course.lessonsCount}
-            status={course.status}
+            lessonsCount={course.courseLessons || 0}
+            status={mapCourseStatus(course.status)}
             onEdit={() => console.log("Edit", course.id)}
-            onDelete={() => console.log("Delete", course.id)}
+            onDelete={() => handleStatusChange(course)}
           />
         ))}
       </div>
