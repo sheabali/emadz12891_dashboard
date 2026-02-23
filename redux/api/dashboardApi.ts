@@ -102,7 +102,7 @@ export const dashboardApi = baseApi.injectEndpoints({
 
     addChallenge: builder.mutation({
       query: (challengeData) => ({
-        url: "/challenges",
+        url: "/challenges/create-challenge",
         method: "POST",
         body: challengeData,
       }),

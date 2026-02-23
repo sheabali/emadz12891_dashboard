@@ -19,10 +19,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useAddChallengeMutation } from "@/redux/api/dashboardApi";
+import { useUpdateChallengeMutation } from "@/redux/api/dashboardApi";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -33,9 +32,7 @@ const challengeFormSchema = z.object({
   benefits: z.string().min(1, "Benefits are required"),
   points: z.coerce.number().min(0, "Points must be 0 or greater"),
   duration: z.coerce.number().min(1, "Duration is required"),
-
   difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
-
   status: z.enum([
     "UPCOMING",
     "ACTIVE",
@@ -48,57 +45,55 @@ const challengeFormSchema = z.object({
 
 type ChallengeFormValues = z.infer<typeof challengeFormSchema>;
 
-interface AddChallengeFormProps {
-  onSubmit?: (data: ChallengeFormValues) => void;
+interface UpdateChallengeFormProps {
+  challengeId: string;
+  initialData: ChallengeFormValues;
+  onSuccess?: () => void;
   onCancel?: () => void;
 }
 
-export function AddChallengeForm({
-  onSubmit,
+export function UpdateChallengeForm({
+  challengeId,
+  initialData,
+  onSuccess,
   onCancel,
-}: AddChallengeFormProps) {
-  const router = useRouter();
-
+}: UpdateChallengeFormProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [createChallenge] = useAddChallengeMutation();
+  const [updateChallenge] = useUpdateChallengeMutation();
 
   const form = useForm<ChallengeFormValues>({
     resolver: zodResolver(challengeFormSchema as any),
-    defaultValues: {
-      title: "",
-      description: "",
-      requirements: "",
-      benefits: "",
-      points: 0,
-      duration: 30,
-      difficulty: "EASY",
-      status: "ACTIVE",
-    },
+    defaultValues: initialData,
   });
+
+  // Re-populate form if initialData changes (e.g. modal reuse)
+  useEffect(() => {
+    if (initialData) {
+      form.reset(initialData);
+    }
+  }, [initialData, form]);
 
   async function handleSubmit(data: ChallengeFormValues) {
     setIsLoading(true);
     try {
-      await createChallenge(data).unwrap();
-      if (onSubmit) onSubmit(data);
-      form.reset();
-      router.push("/admin/dashboard/challenges-managernent");
+      await updateChallenge({ id: challengeId, body: data }).unwrap();
+      if (onSuccess) onSuccess();
     } catch (error) {
-      console.error("Form submission error:", error);
+      console.error("Update error:", error);
     } finally {
       setIsLoading(false);
     }
   }
 
   const handleCancel = () => {
-    form.reset();
+    form.reset(initialData);
     if (onCancel) onCancel();
   };
 
   return (
     <div className="container mx-auto border mt-6 border-gray-300 rounded-lg overflow-hidden bg-white">
       <div className="bg-[#276dab] px-6 py-4">
-        <h2 className="text-lg font-semibold text-white">Add New Challenge</h2>
+        <h2 className="text-lg font-semibold text-white">Update Challenge</h2>
       </div>
 
       <div className="p-6">
@@ -107,6 +102,7 @@ export function AddChallengeForm({
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-6"
           >
+            {/* Title */}
             <FormField
               control={form.control}
               name="title"
@@ -127,6 +123,7 @@ export function AddChallengeForm({
               )}
             />
 
+            {/* Description */}
             <FormField
               control={form.control}
               name="description"
@@ -167,6 +164,7 @@ export function AddChallengeForm({
               )}
             />
 
+            {/* Benefits */}
             <FormField
               control={form.control}
               name="benefits"
@@ -242,10 +240,7 @@ export function AddChallengeForm({
                     <FormLabel className="text-sm font-medium text-gray-700">
                       Difficulty <span className="text-red-500">*</span>
                     </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="bg-gray-100 border-gray-300">
                           <SelectValue placeholder="Select difficulty" />
@@ -270,19 +265,15 @@ export function AddChallengeForm({
                     <FormLabel className="text-sm font-medium text-gray-700">
                       Status <span className="text-red-500">*</span>
                     </FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-gray-100 border-gray-300">
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="UPCOMING">Upcoming</SelectItem>
                         <SelectItem value="ACTIVE">Active</SelectItem>
-                        <SelectItem value="ONGOING">Ongoing</SelectItem>
-                        <SelectItem value="COMPLETED">Completed</SelectItem>
-                        <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                        <SelectItem value="DELETED">Deleted</SelectItem>
+                        <SelectItem value="INACTIVE">Inactive</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -307,7 +298,7 @@ export function AddChallengeForm({
                 disabled={isLoading}
                 className="flex-1 bg-[#276dab] py-6 hover:bg-blue-800 text-white"
               >
-                {isLoading ? "Creating..." : "Create Challenge"}
+                {isLoading ? "Updating..." : "Update Challenge"}
               </Button>
             </div>
           </form>
