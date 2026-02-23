@@ -1,18 +1,43 @@
-// components/course-card.tsx
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Pencil, Trash2 } from "lucide-react";
+
+export enum ChallengeStatus {
+  ACTIVE = "ACTIVE",
+  DELETED = "DELETED",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
+  UPCOMING = "UPCOMING",
+}
 
 interface ChallengesCardProps {
   title: string;
   description: string;
   category: string;
   lessonsCount: number;
-  status: "active" | "deleted";
+  status: ChallengeStatus;
+  points: number;
+  duration: number;
   onEdit?: () => void;
   onDelete?: () => void;
 }
+
+const statusStyles: Record<ChallengeStatus, string> = {
+  ACTIVE: "bg-green-500 text-white",
+  DELETED: "bg-red-600 text-white",
+  COMPLETED: "bg-blue-500 text-white",
+  CANCELLED: "bg-gray-500 text-white",
+  UPCOMING: "bg-yellow-500 text-white",
+};
+
+const statusLabel: Record<ChallengeStatus, string> = {
+  ACTIVE: "Active",
+  DELETED: "Deleted",
+  COMPLETED: "Completed",
+  CANCELLED: "Cancelled",
+  UPCOMING: "Upcoming",
+};
 
 export function ChallengesCard(props: ChallengesCardProps) {
   const {
@@ -21,6 +46,8 @@ export function ChallengesCard(props: ChallengesCardProps) {
     category,
     lessonsCount,
     status,
+    points,
+    duration,
     onEdit,
     onDelete,
   } = props;
@@ -32,12 +59,10 @@ export function ChallengesCard(props: ChallengesCardProps) {
           <span
             className={cn(
               "px-3 py-1 text-sm font-medium rounded-full",
-              status === "active"
-                ? "bg-green-500 text-white"
-                : "bg-red-600 text-white",
+              statusStyles[status],
             )}
           >
-            {status === "active" ? "Active" : "Inactive"}
+            {statusLabel[status]}
           </span>
 
           <div className="flex gap-3">
@@ -54,14 +79,15 @@ export function ChallengesCard(props: ChallengesCardProps) {
         </div>
 
         <div className="space-y-1">
-          <h3 className="text-xl ">{title}</h3>
+          <h3 className="text-xl">{title}</h3>
           <p className="text-gray-600 text-sm">{description}</p>
         </div>
 
         <Separator />
         <div className="flex items-center justify-between pt-2">
-          {/* <span className="text-blue-600 font-medium">{category}</span> */}
-          <span className="text-purple-600 font-medium">300 pts 30 days</span>
+          <span className="text-purple-600 font-medium">
+            {points} pts • {duration} days
+          </span>
           <span className="text-blue-600 font-medium">
             {lessonsCount} joined
           </span>

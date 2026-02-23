@@ -97,6 +97,49 @@ export const dashboardApi = baseApi.injectEndpoints({
         body: { fileId },
       }),
     }),
+
+    // Challenge management endpoints can be added here similarly
+
+    addChallenge: builder.mutation({
+      query: (challengeData) => ({
+        url: "/challenges",
+        method: "POST",
+        body: challengeData,
+      }),
+      invalidatesTags: ["Dashboard"],
+    }),
+    getSingleChallenge: builder.query({
+      query: (challengeId) => ({
+        url: `/challenges/${challengeId}`,
+        method: "GET",
+      }),
+    }),
+
+    updateChallenge: builder.mutation({
+      query: ({ id, challengeData }) => ({
+        url: `/challenges/${id}`,
+        method: "PATCH",
+        body: challengeData,
+      }),
+      invalidatesTags: ["Dashboard"],
+    }),
+
+    getAllChallenges: builder.query({
+      query: ({ limit, page, searchQuery, difficulty }) => {
+        return {
+          url: `/challenges?page=${page || 1}&limit=${limit || 10}${searchQuery ? `&searchTerm=${searchQuery}` : ""}${difficulty ? `&difficulty=${difficulty}` : ""}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Dashboard"],
+    }),
+    deleteChallenge: builder.mutation({
+      query: (challengeId) => ({
+        url: `/challenges/${challengeId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Dashboard"],
+    }),
   }),
 });
 
@@ -112,4 +155,10 @@ export const {
   useSingleFileUploaderMutation,
   useGetSingleCourseQuery,
   useUpdateCourseMutation,
+  // challenges api
+  useAddChallengeMutation,
+  useGetAllChallengesQuery,
+  useDeleteChallengeMutation,
+  useGetSingleChallengeQuery,
+  useUpdateChallengeMutation,
 } = dashboardApi;
