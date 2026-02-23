@@ -54,6 +54,21 @@ export const dashboardApi = baseApi.injectEndpoints({
       },
       providesTags: ["Dashboard"],
     }),
+
+    getSingleCourse: builder.query({
+      query: (courseId) => ({
+        url: `/courses/${courseId}`,
+        method: "GET",
+      }),
+    }),
+    updateCourse: builder.mutation({
+      query: ({ id, courseData }) => ({
+        url: `/courses/${id}`,
+        method: "PATCH",
+        body: courseData,
+      }),
+      invalidatesTags: ["Dashboard"],
+    }),
     deleteCourse: builder.mutation({
       query: (courseId) => ({
         url: `/courses/${courseId}`,
@@ -95,4 +110,6 @@ export const {
   useDeleteFileMutation,
   useMultipleFileUploaderMutation,
   useSingleFileUploaderMutation,
+  useGetSingleCourseQuery,
+  useUpdateCourseMutation,
 } = dashboardApi;

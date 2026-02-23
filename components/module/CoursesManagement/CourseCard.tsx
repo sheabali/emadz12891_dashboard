@@ -2,8 +2,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Pencil, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 interface CourseCardProps {
+  id: string;
   title: string;
   description: string;
   category: string;
@@ -40,9 +42,14 @@ export function CourseCard(props: CourseCardProps) {
           </span>
 
           <div className="flex gap-3">
-            <button onClick={onEdit} className="text-blue-600 hover:opacity-70">
-              <Pencil size={18} />
-            </button>
+            <Link href={`/admin/dashboard/courses-management/${props.id}`}>
+              <button
+                onClick={onEdit}
+                className="text-blue-500 mt-2 hover:opacity-70"
+              >
+                <Pencil size={18} />
+              </button>
+            </Link>
             <button
               onClick={onDelete}
               className="text-red-500 hover:opacity-70"
