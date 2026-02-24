@@ -140,6 +140,17 @@ export const dashboardApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Dashboard"],
     }),
+
+    // subscriptions
+    getAllSubscriptions: builder.query({
+      query: ({ limit, page, searchQuery }) => {
+        return {
+          url: `/subscriptions?page=${page || 1}&limit=${limit || 10}${searchQuery ? `&searchTerm=${searchQuery}` : ""}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Dashboard"],
+    }),
   }),
 });
 
@@ -161,4 +172,6 @@ export const {
   useDeleteChallengeMutation,
   useGetSingleChallengeQuery,
   useUpdateChallengeMutation,
+  // subscription api
+  useGetAllSubscriptionsQuery,
 } = dashboardApi;

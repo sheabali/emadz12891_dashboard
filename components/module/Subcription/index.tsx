@@ -1,38 +1,35 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Search, UserCheck, Users2, UserX } from "lucide-react";
-import Image from "next/image";
+import { Search, Users2 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
 
 import MetricCard from "@/components/shared/MetricCardDashboard";
-import { CustomSelect } from "@/components/ui/core/CustomSelect/CustomSelect";
 import { EMTable } from "@/components/ui/core/NRTable";
 import TablePagination from "@/components/ui/core/NRTable/TablePagination";
+import { useGetAllSubscriptionsQuery } from "@/redux/api/dashboardApi";
 import { RevenueGrowthChart } from "../DashboardOverview/UserChart";
 
-type UserStatus = "ACTIVE" | "SUSPENDED";
+type SubscriptionStatus = "ACTIVE" | "SUSPENDED";
 
-type Customer = {
-  id: number;
-  fullName: string;
+type Subscription = {
+  id: string;
+  name: string;
   email: string;
-  role: string;
-  status: UserStatus;
-  profileImage?: string;
-  phoneNumber?: string;
-  createdAt?: string;
+  price: number;
+  planType: "FREE" | "PREMIUM";
+  status: SubscriptionStatus;
+  startDate?: string;
   endDate?: string;
+  createdAt?: string;
 };
 
-const statusStyles: Record<UserStatus, string> = {
+const statusStyles: Record<SubscriptionStatus, string> = {
   ACTIVE: "bg-green-100 text-green-600 border-green-200",
   SUSPENDED: "bg-red-100 text-red-600 border-red-200",
 };
 
-const StatusBadge = ({ status }: { status: UserStatus }) => (
+const StatusBadge = ({ status }: { status: SubscriptionStatus }) => (
   <span
     className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${statusStyles[status]}`}
   >
@@ -43,151 +40,105 @@ const StatusBadge = ({ status }: { status: UserStatus }) => (
 const Subcription = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [category, setCategory] = useState<string | undefined>(undefined);
-
-  const response = {
-    data: [
-      {
-        id: 1,
-        fullName: "John Doe",
-        email: "john@example.com",
-        role: "Admin",
-        status: "ACTIVE",
-        profileImage: "/boy.png",
-        phoneNumber: "+1 234 567 890",
-        createdAt: "2024-01-10",
-        endDate: "2024-01-10",
-      },
-      {
-        id: 1,
-        fullName: "John Doe",
-        email: "john@example.com",
-        role: "Admin",
-        status: "ACTIVE",
-        profileImage: "/boy.png",
-        phoneNumber: "+1 234 567 890",
-        createdAt: "2024-01-10",
-        endDate: "2024-01-10",
-      },
-      {
-        id: 1,
-        fullName: "John Doe",
-        email: "john@example.com",
-        role: "Admin",
-        status: "ACTIVE",
-        profileImage: "/boy.png",
-        phoneNumber: "+1 234 567 890",
-        createdAt: "2024-01-10",
-        endDate: "2024-01-10",
-      },
-    ] as Customer[],
-    meta: {
-      total: 2,
-    },
-  };
 
   const dashboard = {
-    totalUsers: 2,
-    activeUsers: 1,
-    suspendedUsers: 1,
     revenueChart: [
       {
-        name: "Jan",
-        value: 12,
+        month: "Feb",
+        year: 2026,
+        count: 1,
       },
 
       {
-        name: "Feb",
-        value: 45,
+        month: "Feb",
+        year: 2026,
+        count: 5,
       },
       {
-        name: "Mar",
-        value: 98,
-      },
-
-      {
-        name: "Apr",
-        value: 12,
+        month: "Feb",
+        year: 2026,
+        count: 1,
       },
 
       {
-        name: "May",
-        value: 45,
+        month: "Feb",
+        year: 2026,
+        count: 10,
+      },
+
+      {
+        month: "Feb",
+        year: 2026,
+        count: 6,
       },
     ],
   };
 
+  const { data: subscriptions } = useGetAllSubscriptionsQuery({
+    page: currentPage,
+    limit: 10,
+    searchQuery,
+    // category: category === "All" ? undefined : category,
+  });
+
+  const userData = subscriptions?.data ?? [];
+  const meta = subscriptions?.meta;
+  const totalItems = subscriptions?.meta?.total ?? 0;
+
   const metrics = [
     {
-      title: "Total Users",
-      value: dashboard.totalUsers,
+      title: "Total Subscriptions",
+      value: meta?.totalSubscriptions ?? 0,
       icon: <Users2 className="text-blue-600" />,
       bg: "bg-blue-100",
     },
     {
-      title: "Active Users",
-      value: dashboard.activeUsers,
-      icon: <UserCheck className="text-green-700" />,
-      bg: "bg-green-100",
-    },
-    {
-      title: "Suspended Users",
-      value: dashboard.suspendedUsers,
-      icon: <UserX className="text-red-600" />,
-      bg: "bg-red-100",
+      title: "Active Subscriptions",
+      value: meta?.activeSubscriptions ?? 0,
+      icon: <Users2 className="text-blue-600" />,
+      bg: "bg-blue-100",
     },
   ];
-
-  const userData = response.data;
-  const totalItems = response.meta.total;
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setCurrentPage(1);
   };
 
-  const handleStatusChange = async (customer: Customer, status: UserStatus) => {
-    try {
-      // await suspendUser({ id: customer.id, status }).unwrap();
-      toast.success(
-        `User ${status === "SUSPENDED" ? "suspended" : "activated"} successfully`,
-      );
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Something went wrong");
-    }
-  };
+  // const handleStatusChange = async (
+  //   subscription: Subscription,
+  //   status: SubscriptionStatus,
+  // ) => {
+  //   try {
+  //     // await suspendUser({ id: customer.id, status }).unwrap();
+  //     toast.success(
+  //       `User ${status === "SUSPENDED" ? "suspended" : "activated"} successfully`,
+  //     );
+  //   } catch (error: any) {
+  //     toast.error(error?.data?.message || "Something went wrong");
+  //   }
+  // };
 
-  const columns = useMemo<ColumnDef<Customer>[]>(
+  const columns = useMemo<ColumnDef<Subscription>[]>(
     () => [
       {
-        id: "customer",
-        header: "Customer",
+        accessorKey: "name",
+        header: "Plan",
         cell: ({ row }) => (
-          <div className="flex items-center gap-3">
-            <Image
-              src={row.original.profileImage || "/boy.png"}
-              alt="avatar"
-              width={36}
-              height={36}
-              className="rounded-full object-cover"
-            />
-            <div>
-              <p className="font-medium text-gray-900">
-                {row.original.fullName}
-              </p>
-              <p className="text-xs text-gray-500">{row.original.email}</p>
-            </div>
+          <div>
+            <p className="font-medium">{row.original.name}</p>
+            <p className="text-xs text-gray-500">{row.original.planType}</p>
           </div>
         ),
       },
       {
-        accessorKey: "phoneNumber",
-        header: "Phone",
-        cell: ({ row }) => (
-          <p className="text-sm text-gray-700">
-            {row.original.phoneNumber || "N/A"}
-          </p>
-        ),
+        accessorKey: "email",
+        header: "User Email",
+      },
+      {
+        accessorKey: "price",
+        header: "Price",
+        cell: ({ row }) => `$${row.original.price}`,
       },
       {
         accessorKey: "status",
@@ -195,26 +146,20 @@ const Subcription = () => {
         cell: ({ row }) => <StatusBadge status={row.original.status} />,
       },
       {
-        accessorKey: "createdAt",
-        header: "Joined",
-        cell: ({ row }) => (
-          <p className="text-sm text-gray-700">
-            {row.original.createdAt
-              ? new Date(row.original.createdAt).toLocaleDateString()
-              : "N/A"}
-          </p>
-        ),
+        accessorKey: "startDate",
+        header: "Start Date",
+        cell: ({ row }) =>
+          row.original.startDate
+            ? new Date(row.original.startDate).toLocaleDateString()
+            : "N/A",
       },
       {
         accessorKey: "endDate",
         header: "End Date",
-        cell: ({ row }) => (
-          <p className="text-sm text-gray-700">
-            {row.original.endDate
-              ? new Date(row.original.endDate).toLocaleDateString()
-              : "N/A"}
-          </p>
-        ),
+        cell: ({ row }) =>
+          row.original.endDate
+            ? new Date(row.original.endDate).toLocaleDateString()
+            : "N/A",
       },
     ],
     [],
@@ -231,7 +176,7 @@ const Subcription = () => {
 
       <div className="border-b p-4">
         <h2 className="text-lg font-semibold text-gray-900">
-          Subcription Growth
+          Subcription Growth (Static)
         </h2>
       </div>
 
@@ -247,22 +192,10 @@ const Subcription = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Search by name, email, or phone"
+              placeholder="Search by plan or email"
               className="border border-gray-300 rounded-md px-3 py-2 w-full"
             />
           </div>
-        </div>
-
-        <div>
-          <CustomSelect
-            label="Category"
-            placeholder="Select category"
-            options={["All", "Active", "Suspended"]}
-            onChange={(value) => {
-              setCategory(value);
-              setCurrentPage(1);
-            }}
-          />
         </div>
       </div>
 

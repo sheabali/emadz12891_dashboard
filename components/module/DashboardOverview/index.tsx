@@ -109,7 +109,7 @@ const DashboardOverview = () => {
       </div>
 
       <div className="lg:col-span-2">
-        <RevenueGrowthChart data={dashboard?.revenueChart ?? []} />
+        <RevenueGrowthChart data={dashboard?.challengeJoinGrowth ?? []} />
       </div>
     </div>
   );

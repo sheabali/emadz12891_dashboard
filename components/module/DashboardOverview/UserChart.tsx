@@ -11,18 +11,20 @@ import {
   YAxis,
 } from "recharts";
 
-interface RevenueItem {
-  name: string;
-  value: number;
-}
-
-export const RevenueGrowthChart = ({ data }: { data: RevenueItem[] }) => {
+// interface RevenueItem {
+//   month: string;
+//   year: number;
+//   count: number;
+// }
+export const RevenueGrowthChart = ({ data }: { data: any[] }) => {
   if (!data || data.length === 0) return null;
+  console.log("revienue growth ", data);
 
   const chartData = data.map((item) => ({
-    month: item.name,
-    revenue: item.value,
+    month: `${item.month} ${item.year}`,
+    revenue: item.count,
   }));
+  console.log("chartData", chartData);
 
   return (
     <div className="bg-white border-0 shadow-lg p-6 rounded-2xl h-full w-full">
