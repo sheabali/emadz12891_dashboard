@@ -35,7 +35,7 @@ const Page = () => {
           difficulty: challenge.difficulty,
           status: challenge.status,
         }}
-        onSuccess={() => router.push("/dashboard/challenges")}
+        onSuccess={() => router.push("/admin/dashboard/challenges-managernent")}
         onCancel={() => router.back()}
       />
     </div>

@@ -60,11 +60,6 @@ const data = {
         url: "/admin/dashboard/subcription",
         icon: User,
       },
-      {
-        title: "Go Back To Home",
-        url: "/",
-        icon: Home,
-      },
     ],
   },
 };
@@ -85,7 +80,7 @@ export default function AppSidebar({ role, ...props }: AppSidebarProps) {
     >
       <SidebarHeader>
         <Link
-          href={"/"}
+          href={"/admin/dashboard"}
           className="flex items-center w-full  max-h-40 justify-center"
         >
           <Image

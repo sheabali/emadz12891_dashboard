@@ -52,7 +52,9 @@ const PHInput = ({
                 disabled={disabled}
                 placeholder={placeholder}
                 type={isPassword ? (showPassword ? "text" : "password") : type}
-                className={isPassword ? "pr-10  py-6" : " py-6"}
+                className={
+                  isPassword ? "pr-10  py-6 bg-white" : "bg-white py-6"
+                }
               />
 
               {isPassword && (
@@ -62,9 +64,9 @@ const PHInput = ({
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
+                    <EyeOff className="h-4 w-4 text-black" />
                   ) : (
-                    <Eye className="h-4 w-4" />
+                    <Eye className="h-4 w-4 text-black" />
                   )}
                 </button>
               )}

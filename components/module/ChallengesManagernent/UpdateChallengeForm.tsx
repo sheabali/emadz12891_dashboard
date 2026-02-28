@@ -76,7 +76,7 @@ export function UpdateChallengeForm({
   async function handleSubmit(data: ChallengeFormValues) {
     setIsLoading(true);
     try {
-      await updateChallenge({ id: challengeId, body: data }).unwrap();
+      await updateChallenge({ id: challengeId, challengeData: data }).unwrap();
       if (onSuccess) onSuccess();
     } catch (error) {
       console.error("Update error:", error);

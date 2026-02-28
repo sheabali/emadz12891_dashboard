@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { Pencil, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 export enum ChallengeStatus {
   ACTIVE = "ACTIVE",
@@ -21,6 +22,7 @@ interface ChallengesCardProps {
   duration: number;
   onEdit?: () => void;
   onDelete?: () => void;
+  id: string;
 }
 
 const statusStyles: Record<ChallengeStatus, string> = {
@@ -50,6 +52,7 @@ export function ChallengesCard(props: ChallengesCardProps) {
     duration,
     onEdit,
     onDelete,
+    id,
   } = props;
 
   return (
@@ -66,9 +69,14 @@ export function ChallengesCard(props: ChallengesCardProps) {
           </span>
 
           <div className="flex gap-3">
-            <button onClick={onEdit} className="text-blue-600 hover:opacity-70">
-              <Pencil size={18} />
-            </button>
+            <Link href={`/admin/dashboard/challenges-managernent/${props.id}`}>
+              <button
+                onClick={onEdit}
+                className="text-blue-600 hover:opacity-70"
+              >
+                <Pencil size={18} />
+              </button>
+            </Link>
             <button
               onClick={onDelete}
               className="text-red-500 hover:opacity-70"

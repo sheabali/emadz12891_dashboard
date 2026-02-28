@@ -224,6 +224,7 @@ const ChallengesManagement = () => {
                   status={challenge.status as ChallengeStatus}
                   onEdit={() => console.log("Edit challenge:", challenge.id)}
                   onDelete={() => handleDeleteClick(challenge.id)}
+                  id={challenge.id}
                 />
               ))}
             </div>
